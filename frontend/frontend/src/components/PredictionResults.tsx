@@ -27,7 +27,7 @@ const teamColors: Record<string, string> = {
 };
 
 // Realistic Driver Stats Map (2025 Estimates)
-const driverStatsMap: Record<string, { team: string; wetRating: number; overtakeRisk: string; qualiAvg: number; recentForm: number[] }> = {
+const driverStatsMap: Record<string, { team: string; wetRating: number; overtakeRisk: "LOW" | "MEDIUM" | "HIGH"; qualiAvg: number; recentForm: number[] }> = {
     max_verstappen: { team: "Red Bull Racing", wetRating: 9.9, overtakeRisk: "HIGH", qualiAvg: 1.2, recentForm: [1, 1, 2, 1, 1] },
     tsunoda: { team: "Red Bull Racing", wetRating: 7.8, overtakeRisk: "HIGH", qualiAvg: 5.0, recentForm: [4, 5, 4, 5, 4] },
     hamilton: { team: "Scuderia Ferrari", wetRating: 9.6, overtakeRisk: "HIGH", qualiAvg: 3.5, recentForm: [3, 4, 2, 5, 3] },
@@ -54,7 +54,7 @@ const getDriverStats = (driverId: string) => {
     const stats = driverStatsMap[driverId] || {
         team: "Unknown Team",
         wetRating: 7.0,
-        overtakeRisk: "MEDIUM",
+        overtakeRisk: "MEDIUM" as "LOW" | "MEDIUM" | "HIGH",
         qualiAvg: 10.0,
         recentForm: [10, 10, 10, 10, 10]
     };

@@ -61,7 +61,7 @@ class LiveRacePredictor:
             print(f"❌ Error loading resources: {e}")
             return False
 
-    def predict_live(self, season, round_num, live_telemetry=None):
+    def predict_live(self, season, round_num, live_telemetry=None, circuit_id=None):
         """
         Make predictions using Live Telemetry
         
@@ -72,10 +72,10 @@ class LiveRacePredictor:
             'overtakes': int
         }
         """
-        print(f"\n🏁 Generating LIVE Predictions for {season} R{round_num}")
+        print(f"\n🏁 Generating LIVE Predictions for {season} R{round_num} (Circuit: {circuit_id})")
         
         # 1. Get Base Race Data (Grid, Driver Info)
-        race_data = self._get_race_context(season, round_num)
+        race_data = self._get_race_context(season, round_num, circuit_id)
         if race_data is None:
             return None
             
@@ -92,9 +92,11 @@ class LiveRacePredictor:
         Adapter for Frontend Simulation Requests
         params: dict with circuit, air_temp, rain_prob, etc.
         """
-        # 1. Dynamic Circuit Mapping (Solve "Same Prediction" issue)
-        # Map circuit name to 2025 round number
-        circuit_map = {
+        # 1. Dynamic Circuit Mapping
+        circuit_key = params.get('circuit', 'bahrain').lower()
+        
+        # Map to Round Number (2025 Calendar)
+        round_map = {
             'bahrain': 1, 'jeddah': 2, 'melbourne': 3, 'suzuka': 4, 'shanghai': 5,
             'miami': 6, 'imola': 7, 'monaco': 8, 'montreal': 9, 'barcelona': 10,
             'spielberg': 11, 'silverstone': 12, 'hungaroring': 13, 'spa': 14,
@@ -102,13 +104,28 @@ class LiveRacePredictor:
             'austin': 19, 'mexico': 20, 'interlagos': 21, 'vegas': 22,
             'lusail': 23, 'abudhabi': 24
         }
-        circuit_key = params.get('circuit', 'bahrain').lower()
+        
+        # Map to Database Circuit ID
+        circuit_id_map = {
+            'bahrain': 'bahrain', 'jeddah': 'jeddah', 'melbourne': 'albert_park', 
+            'suzuka': 'suzuka', 'shanghai': 'shanghai', 'miami': 'miami', 
+            'imola': 'imola', 'monaco': 'monaco', 'montreal': 'villeneuve', 
+            'barcelona': 'catalunya', 'spielberg': 'red_bull_ring', 'silverstone': 'silverstone', 
+            'hungaroring': 'hungaroring', 'spa': 'spa', 'zandvoort': 'zandvoort', 
+            'monza': 'monza', 'baku': 'baku', 'singapore': 'marina_bay', 
+            'austin': 'americas', 'mexico': 'rodriguez', 'interlagos': 'interlagos', 
+            'vegas': 'las_vegas', 'lusail': 'losail', 'abudhabi': 'yas_marina'
+        }
+
         # Handle variations
         if 'saudi' in circuit_key: circuit_key = 'jeddah'
         if 'albert' in circuit_key: circuit_key = 'melbourne'
         if 'red bull' in circuit_key: circuit_key = 'spielberg'
+        if 'qatar' in circuit_key: circuit_key = 'lusail'
+        if 'abu' in circuit_key: circuit_key = 'abudhabi'
         
-        round_num = circuit_map.get(circuit_key, 1)
+        round_num = round_map.get(circuit_key, 1)
+        circuit_id = circuit_id_map.get(circuit_key, circuit_key)
         season = 2025
         
         # 2. Load Data-Driven Stats
@@ -124,40 +141,33 @@ class LiveRacePredictor:
         safety_car = params.get('safety_car', 'none')
         sc_count = 1 if safety_car != 'none' else 0
         
-        # 2025 Grid (Confirmed)
-        # Removed: Perez, Bottas, Zhou, Magnussen, Sargeant, Ricciardo
-        # Added: Antonelli, Doohan, Bearman, Lawson, Colapinto, Bortoleto (if confirmed, else Hadjar/Iwasa)
+        # 2025 Grid
         drivers = [
-            'max_verstappen', 'tsunoda',      # Red Bull (Max, Yuki)
+            'max_verstappen', 'tsunoda',      # Red Bull
             'hamilton', 'leclerc',            # Ferrari
             'norris', 'piastri',              # McLaren
             'russell', 'antonelli',           # Mercedes
             'alonso', 'stroll',               # Aston Martin
-            'gasly', 'colapinto',             # Alpine (Gasly, Franco)
+            'gasly', 'colapinto',             # Alpine
             'albon', 'sainz',                 # Williams
-            'lawson', 'hadjar',               # RB (Liam, Isack)
+            'lawson', 'hadjar',               # RB
             'ocon', 'bearman',                # Haas
-            'hulkenberg', 'bortoleto'         # Sauber (Hulk, Gabriel)
+            'hulkenberg', 'bortoleto'         # Sauber
         ]
         
-        # Note: 'hadjar' and 'colapinto' might need stats defaults if not in history
-        # We will map them to rookie defaults in the loop below
-                   
         for driver in drivers:
             stats = driver_stats.get(driver, {'dry_pace': 1.02, 'wet_pace': 1.05})
             
             # Base Pace
             if is_wet:
                 pace = stats['wet_pace']
-                # DATA CORRECTION: If sample size was small (e.g. Max not top), 
-                # apply "Champion Factor" for proven wet weather experts
                 if driver in ['max_verstappen', 'hamilton']:
-                    pace = min(pace, 1.00) # Cap at 1.00 (very fast)
+                    pace = min(pace, 1.00)
             else:
                 pace = stats['dry_pace']
                 
-            # Circuit Specific Adjustments (e.g. Ferrari good at Monza)
-            if circuit_key == 'monza' and driver in ['leclerc', 'hamilton']: # Lewis at Ferrari
+            # Circuit Specific Adjustments (Hardcoded overrides for obvious ones)
+            if circuit_key == 'monza' and driver in ['leclerc', 'hamilton']:
                 pace -= 0.01
             if circuit_key == 'zandvoort' and driver == 'max_verstappen':
                 pace -= 0.01
@@ -169,9 +179,9 @@ class LiveRacePredictor:
                 'rain_prob': params.get('rain_prob', 0)
             }
             
-        return self.predict_live(season, round_num, telemetry)
+        return self.predict_live(season, round_num, telemetry, circuit_id)
 
-    def _get_race_context(self, season, round_num):
+    def _get_race_context(self, season, round_num, circuit_id=None):
         """Get static race data (grid, history)"""
         # Find race in historical data
         race_slice = self.historical_data[
@@ -184,56 +194,6 @@ class LiveRacePredictor:
             
             # 1. Calculate Current 2025 Form (Avg Finish Position)
             current_season_data = self.historical_data[self.historical_data['season'] == 2025]
-            if len(current_season_data) > 0:
-                form = current_season_data.groupby('driver_id')['position'].mean().to_dict()
-            else:
-                # Fallback to 2024 if 2025 not started in data
-                form = self.historical_data[self.historical_data['season'] == 2024].groupby('driver_id')['position'].mean().to_dict()
-                
-            # 2. Calculate Track History (Avg Finish at this circuit)
-            # We need to know which circuit we are predicting for. 
-            # Since _get_race_context doesn't know the circuit name directly, we infer or pass it.
-            # For now, we use a general "Circuit Suitability" metric from all data.
-            
-            drivers = [
-                'max_verstappen', 'tsunoda', 'hamilton', 'leclerc', 'norris', 'piastri',
-                'russell', 'antonelli', 'alonso', 'stroll', 'gasly', 'colapinto',
-                'albon', 'sainz', 'lawson', 'hadjar', 'ocon', 'bearman',
-                'hulkenberg', 'bortoleto'
-            ]
-            
-            synthetic_data = []
-            
-            # Sort drivers by form to create a realistic grid
-            # Lower avg position is better
-            sorted_drivers = sorted(drivers, key=lambda d: form.get(d, 10.0))
-            
-            for i, driver in enumerate(sorted_drivers):
-                # Get stats
-                avg_pos = form.get(driver, 10.0)
-                # Normalize metrics (1.0 is best, 0.0 is worst)
-                performance_score = max(0.1, 1.0 - (avg_pos / 20.0))
-                
-                synthetic_data.append({
-                    'season': season,
-                    'round': round_num,
-                    'driver_id': driver,
-                    'grid': i + 1, # Grid based on current form (Pole = Best Form)
-                    'recent_pace': 1.0 + (avg_pos * 0.001), # Slower if worse form
-                    'recent_consistency': performance_score,
-                    'experience_years': 5,
-                    'podium_rate': performance_score * 0.5,
-                    'dnf_rate': 0.05,
-                    'avg_pit_stop': 2.5,
-                    'qualifying_performance': performance_score,
-                    'wet_weather_ability': performance_score, # Good drivers usually good in wet
-                    'circuit_suitability': performance_score,
-                    'reliability_score': 0.9,
-                    'team_strategy_score': 0.8 + (performance_score * 0.1),
-                    'tire_management': 0.8 + (performance_score * 0.1),
-                    'pressure_handling': 0.8 + (performance_score * 0.1),
-                    'overtaking_ability': 0.8 + (performance_score * 0.1),
-                    'defending_ability': 0.8 + (performance_score * 0.1),
                     'start_performance': 0.8 + (performance_score * 0.1)
                 })
             

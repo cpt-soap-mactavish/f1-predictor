@@ -114,7 +114,7 @@ export default function SimulationControls({ onSimulate }: SimulationControlsPro
     };
 
     return (
-        <div className="space-y-8 p-6 bg-[#111] border border-white/5 rounded-2xl h-full overflow-y-auto">
+        <div className="space-y-8 p-6 bg-[#111] border border-white/5 rounded-2xl h-full overflow-y-auto relative flex flex-col">
             <div className="flex justify-between items-start">
                 <div>
                     <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
@@ -269,20 +269,22 @@ export default function SimulationControls({ onSimulate }: SimulationControlsPro
                 </div>
             </div>
 
-            <Button
-                onClick={handleSimulate}
-                className="w-full bg-[#E10600] hover:bg-[#c40500] text-white font-bold py-6 text-lg tracking-wider uppercase shadow-[0_0_20px_rgba(225,6,0,0.3)] hover:shadow-[0_0_30px_rgba(225,6,0,0.5)] transition-all group relative overflow-hidden"
-            >
-                <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                    animate={{ x: ["-100%", "200%"] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                />
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                    <Zap className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    Run Simulation
-                </span>
-            </Button>
+            <div className="sticky bottom-0 left-0 right-0 p-4 bg-[#111] border-t border-white/5 -mx-6 -mb-6 mt-auto">
+                <Button
+                    onClick={handleSimulate}
+                    className="w-full bg-[#E10600] hover:bg-[#c40500] text-white font-bold py-6 text-lg tracking-wider uppercase shadow-[0_0_20px_rgba(225,6,0,0.3)] hover:shadow-[0_0_30px_rgba(225,6,0,0.5)] transition-all group relative overflow-hidden"
+                >
+                    <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        animate={{ x: ["-100%", "200%"] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    />
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                        <Zap className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                        Run Simulation
+                    </span>
+                </Button>
+            </div>
         </div>
     );
 }

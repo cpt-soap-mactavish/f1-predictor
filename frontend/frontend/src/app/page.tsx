@@ -105,14 +105,14 @@ export default function Home() {
     <div className="min-h-screen bg-[#0A0A0F] text-white font-sans selection:bg-[#E10600] selection:text-white overflow-x-hidden">
       {/* Cinematic Header */}
       <div className="border-b border-white/10 bg-black/60 backdrop-blur-xl sticky top-0 z-50">
-        <div className="w-full max-w-[1900px] mx-auto px-6 py-4">
+        <div className="w-full max-w-[1900px] mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-8">
-              <div className="flex items-center gap-4">
-                <div className="w-1 h-10 bg-[#E10600] shadow-[0_0_15px_#E10600]" />
+            <div className="flex items-center gap-4 md:gap-8">
+              <div className="flex items-center gap-3 md:gap-4">
+                <div className="w-1 h-8 md:h-10 bg-[#E10600] shadow-[0_0_15px_#E10600]" />
                 <div>
-                  <h1 className="text-xl font-bold tracking-tighter uppercase">Belgian Grand Prix</h1>
-                  <div className="flex items-center gap-2 text-[10px] text-gray-400 font-mono tracking-widest uppercase">
+                  <h1 className="text-lg md:text-xl font-bold tracking-tighter uppercase">Belgian GP</h1>
+                  <div className="hidden md:flex items-center gap-2 text-[10px] text-gray-400 font-mono tracking-widest uppercase">
                     <span>Spa-Francorchamps</span>
                     <span className="w-1 h-1 rounded-full bg-gray-600" />
                     <span>Round 13</span>
@@ -123,14 +123,14 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               {/* Theme & Sound Controls */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 md:gap-2">
                 <ThemeToggle />
                 <SoundToggle isMuted={isMuted} onToggle={toggleMute} />
                 <button
                   onClick={() => setShowShortcuts(true)}
-                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                  className="hidden md:block p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
                   aria-label="Show keyboard shortcuts"
                 >
                   <Keyboard className="w-5 h-5 text-gray-300" />
@@ -138,9 +138,9 @@ export default function Home() {
               </div>
 
               <Link href="/predict">
-                <button className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all group">
+                <button className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all group">
                   <Zap className="w-4 h-4 text-[#E10600] group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-bold tracking-wider text-gray-200">SIMULATION MODE</span>
+                  <span className="text-[10px] md:text-xs font-bold tracking-wider text-gray-200 whitespace-nowrap">SIM MODE</span>
                 </button>
               </Link>
 
@@ -150,7 +150,7 @@ export default function Home() {
                 <span className="text-[10px] font-mono text-yellow-500 tracking-wider">SECTOR 2 YELLOW FLAG</span>
               </div>
 
-              <div className="flex items-center gap-8 text-xs font-mono">
+              <div className="hidden xl:flex items-center gap-8 text-xs font-mono">
                 <div className="flex items-center gap-2">
                   <span className="text-gray-500">AIR</span>
                   <span className="text-white font-bold">23°C</span>
@@ -165,7 +165,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 pl-8 border-l border-white/10">
+              <div className="hidden md:flex items-center gap-4 pl-8 border-l border-white/10">
                 <motion.div
                   className="flex items-center gap-2 px-3 py-1 rounded bg-[#E10600] text-white shadow-[0_0_10px_rgba(225,6,0,0.4)]"
                   animate={{ opacity: [1, 0.8, 1] }}
@@ -263,10 +263,10 @@ export default function Home() {
                   <Gauge className="w-4 h-4 text-gray-600" />
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <div className="text-4xl font-mono font-bold tabular-nums text-white">
+                  <div className="text-3xl md:text-4xl font-mono font-bold tabular-nums text-white">
                     {290 + Math.floor(Math.random() * 45)}
                   </div>
-                  <div className="text-xs text-gray-500 font-mono">KM/H</div>
+                  <div className="text-[10px] md:text-xs text-gray-500 font-mono">KM/H</div>
                 </div>
                 <div className="mt-4 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                   <motion.div
@@ -278,14 +278,14 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#111] rounded-2xl p-5 border border-white/5">
+                <div className="bg-[#111] rounded-2xl p-4 md:p-5 border border-white/5">
                   <div className="text-[10px] text-gray-400 font-mono tracking-widest mb-2">GEAR</div>
-                  <div className="text-3xl font-mono font-bold text-white">{Math.floor(Math.random() * 8) + 1}</div>
+                  <div className="text-2xl md:text-3xl font-mono font-bold text-white">{Math.floor(Math.random() * 8) + 1}</div>
                 </div>
-                <div className="bg-[#111] rounded-2xl p-5 border border-white/5">
+                <div className="bg-[#111] rounded-2xl p-4 md:p-5 border border-white/5">
                   <div className="text-[10px] text-gray-400 font-mono tracking-widest mb-2">RPM</div>
-                  <div className="text-3xl font-mono font-bold text-[#E10600]">
-                    {(10 + Math.random() * 2).toFixed(1)}<span className="text-sm text-gray-500 ml-1">k</span>
+                  <div className="text-2xl md:text-3xl font-mono font-bold text-[#E10600]">
+                    {(10 + Math.random() * 2).toFixed(1)}<span className="text-xs md:text-sm text-gray-500 ml-1">k</span>
                   </div>
                 </div>
               </div>

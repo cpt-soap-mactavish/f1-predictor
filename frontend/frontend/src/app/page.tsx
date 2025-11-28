@@ -3,13 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Radio, Gauge, Activity, Timer, Flag, Wind, Droplets, Keyboard } from "lucide-react";
+import { motion } from "framer-motion";
+import { Zap, Radio, Gauge, Activity, Flag, Keyboard } from "lucide-react";
 import SectorLegend from "@/components/SectorLegend";
 import TrackMapLive from "@/components/TrackMapLive";
 import PaceSparkline from "@/components/PaceSparkline";
-import RaceStatusBar from "@/components/RaceStatusBar";
-import DataModeToggle from "@/components/DataModeToggle";
 import PositionChangeIndicator from "@/components/PositionChangeIndicator";
 import ThemeToggle from "@/components/ThemeToggle";
 import SoundToggle from "@/components/SoundToggle";
@@ -43,9 +41,9 @@ export default function Home() {
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [fastestLapDriver, setFastestLapDriver] = useState<string | null>(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
-  const [positionChanges, setPositionChanges] = useState<Record<number, number>>({});
+  const [positionChanges] = useState<Record<number, number>>({});
   // Hooks
-  const { play, isMuted, toggleMute } = useSound();
+  const { isMuted, toggleMute } = useSound();
   const { toggleTheme } = useTheme();
 
   // Keyboard shortcuts

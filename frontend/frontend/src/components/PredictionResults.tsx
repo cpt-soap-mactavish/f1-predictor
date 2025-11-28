@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Trophy, Medal, Flag } from "lucide-react";
+import { Trophy, Flag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import DriverStatsCard from "@/components/DriverStatsCard";
@@ -27,7 +27,7 @@ const teamColors: Record<string, string> = {
 };
 
 // Realistic Driver Stats Map (2025 Estimates)
-const driverStatsMap: Record<string, any> = {
+const driverStatsMap: Record<string, { team: string; wetRating: number; overtakeRisk: string; qualiAvg: number; recentForm: number[] }> = {
     max_verstappen: { team: "Red Bull Racing", wetRating: 9.9, overtakeRisk: "HIGH", qualiAvg: 1.2, recentForm: [1, 1, 2, 1, 1] },
     tsunoda: { team: "Red Bull Racing", wetRating: 7.8, overtakeRisk: "HIGH", qualiAvg: 5.0, recentForm: [4, 5, 4, 5, 4] },
     hamilton: { team: "Scuderia Ferrari", wetRating: 9.6, overtakeRisk: "HIGH", qualiAvg: 3.5, recentForm: [3, 4, 2, 5, 3] },
@@ -201,7 +201,7 @@ export default function PredictionResults({ results, loading }: PredictionResult
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
-                                {results.slice(3).map((p, idx) => (
+                                {results.slice(3).map((p) => (
                                     <tr key={p.driver_id} className="hover:bg-white/5 transition-colors">
                                         <td className="p-3 text-center font-mono text-gray-400">{p.position}</td>
                                         <td className="p-3">

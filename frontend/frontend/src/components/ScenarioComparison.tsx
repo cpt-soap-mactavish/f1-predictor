@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Trash2, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface Scenario {

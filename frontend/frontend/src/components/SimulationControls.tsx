@@ -109,7 +109,7 @@ export default function SimulationControls({ onSimulate }: SimulationControlsPro
         }
     };
 
-    const updateParam = (key: keyof SimulationState, value: any) => {
+    const updateParam = (key: keyof SimulationState, value: string | number) => {
         setParams(prev => ({ ...prev, [key]: value }));
     };
 

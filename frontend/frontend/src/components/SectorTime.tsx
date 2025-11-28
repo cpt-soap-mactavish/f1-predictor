@@ -1,5 +1,11 @@
-delta ?: string;
-className ?: string;
+import { cn } from "@/lib/utils";
+
+interface SectorTimeProps {
+    sector: number;
+    time: string;
+    status: "fastest" | "personal-best" | "slower";
+    delta?: string;
+    className?: string;
 }
 
 export function SectorTime({

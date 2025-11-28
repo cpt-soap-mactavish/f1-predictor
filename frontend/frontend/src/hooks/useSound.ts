@@ -42,7 +42,6 @@ export function useSound(): UseSoundReturn {
             audio.volume = isMuted ? 0 : volume;
         });
     }, [volume, isMuted]);
-
     const play = useCallback(
         (soundName: string) => {
             if (isMuted) return;

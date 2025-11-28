@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Wind, Zap, RotateCcw, CloudRain } from "lucide-react";
+import { Zap, RotateCcw, CloudRain } from "lucide-react";
 
 export interface SimulationState {
     circuit: string;
@@ -51,16 +51,16 @@ export default function SimulationControls({ onSimulate }: SimulationControlsPro
                     const defaults = await res.json();
                     setParams(prev => ({
                         ...prev,
-                        laps: defaults.laps || 50,
-                        date: defaults.date || "TBD",
-                        weatherSummary: defaults.weather_summary || "Unknown",
-                        airTemp: defaults.air_temp,
-                        trackTemp: defaults.track_temp,
-                        rainProb: defaults.rain_prob,
-                        humidity: defaults.humidity,
-                        tire: defaults.tire,
-                        pitStops: defaults.pit_stops,
-                        safetyCar: defaults.safety_car
+                        laps: (defaults as any).laps || 50,
+                        date: (defaults as any).date || "TBD",
+                        weatherSummary: (defaults as any).weather_summary || "Unknown",
+                        airTemp: (defaults as any).air_temp,
+                        trackTemp: (defaults as any).track_temp,
+                        rainProb: (defaults as any).rain_prob,
+                        humidity: (defaults as any).humidity,
+                        tire: (defaults as any).tire,
+                        pitStops: (defaults as any).pit_stops,
+                        safetyCar: (defaults as any).safety_car
                     }));
                 }
             } catch (error) {

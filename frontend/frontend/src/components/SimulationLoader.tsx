@@ -1,7 +1,8 @@
+
 "use client";
 
 import { motion } from "framer-motion";
-import { Loader2, Zap, CloudRain, Gauge } from "lucide-react";
+import { Zap, CloudRain, Gauge } from "lucide-react";
 
 const loadingSteps = [
     { icon: CloudRain, text: "Analyzing weather conditions...", delay: 0 },

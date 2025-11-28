@@ -1,14 +1,5 @@
-"use client";
-
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-
-interface SectorTimeProps {
-    sector: 1 | 2 | 3;
-    time: string;
-    status: "fastest" | "personal-best" | "slower";
-    delta?: string;
-    className?: string;
+delta ?: string;
+className ?: string;
 }
 
 export function SectorTime({

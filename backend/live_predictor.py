@@ -194,6 +194,128 @@ class LiveRacePredictor:
             
             # 1. Calculate Current 2025 Form (Avg Finish Position)
             current_season_data = self.historical_data[self.historical_data['season'] == 2025]
+            if len(current_season_data) > 0:
+                form = current_season_data.groupby('driver_id')['position'].mean().to_dict()
+            else:
+                # Fallback to 2024 if 2025 not started in data
+                form = self.historical_data[self.historical_data['season'] == 2024].groupby('driver_id')['position'].mean().to_dict()
+                
+            # 2. Calculate Track History (Driver & Team)
+            driver_track_history = {}
+            team_track_history = {}
+            
+            if circuit_id:
+                print(f"📊 Analyzing historical performance at {circuit_id}...")
+                # Look for this circuit in past data (2019-2024)
+                track_data = self.historical_data[
+                    (self.historical_data['circuit_id'] == circuit_id) & 
+                    (self.historical_data['season'] >= 2019)
+                ]
+                
+                if len(track_data) > 0:
+                    # Driver History
+                    driver_track_history = track_data.groupby('driver_id')['position'].mean().to_dict()
+                    
+                    # Team History
+                    team_track_history = track_data.groupby('constructor_id')['position'].mean().to_dict()
+                    
+                    # Boost for wins (Driver)
+                    wins = track_data[track_data['position'] == 1].groupby('driver_id').size().to_dict()
+                    for d, w in wins.items():
+                        if d in driver_track_history:
+                            driver_track_history[d] -= (w * 1.5)
+
+            # 2025 Driver-Team Mapping
+            driver_team_map = {
+                'max_verstappen': 'red_bull', 'tsunoda': 'red_bull',
+                'hamilton': 'ferrari', 'leclerc': 'ferrari',
+                'norris': 'mclaren', 'piastri': 'mclaren',
+                'russell': 'mercedes', 'antonelli': 'mercedes',
+                'alonso': 'aston_martin', 'stroll': 'aston_martin',
+                'gasly': 'alpine', 'colapinto': 'alpine',
+                'albon': 'williams', 'sainz': 'williams',
+                'lawson': 'rb', 'hadjar': 'rb',
+                'ocon': 'haas', 'bearman': 'haas',
+                'hulkenberg': 'sauber', 'bortoleto': 'sauber'
+            }
+            
+            drivers = list(driver_team_map.keys())
+            synthetic_data = []
+            
+            # Calculate Composite Score for Grid Sorting
+            driver_scores = {}
+            for driver in drivers:
+                team = driver_team_map.get(driver, 'unknown')
+                
+                # 1. Current Form Score (50% Weight)
+                # Default to 12.0 (midfield) if no data
+                avg_pos_form = form.get(driver, 12.0)
+                
+                # 2. Driver Track History (30% Weight)
+                # Default to current form if no history
+                avg_pos_driver_track = driver_track_history.get(driver, avg_pos_form)
+                
+                # 3. Team Track History (20% Weight)
+                # Default to current form if no history
+                avg_pos_team_track = team_track_history.get(team, avg_pos_form)
+                
+                # BLENDED SCORE FORMULA
+                # Lower score is better (position)
+                composite_score = (
+                    (avg_pos_form * 0.5) + 
+                    (avg_pos_driver_track * 0.3) + 
+                    (avg_pos_team_track * 0.2)
+                )
+                
+                # Rookie Penalty (if truly no data anywhere)
+                if driver not in form and driver not in driver_track_history:
+                    composite_score = 16.0 # Rookie default
+                    
+                driver_scores[driver] = composite_score
+
+            # Sort drivers by composite score
+            sorted_drivers = sorted(drivers, key=lambda d: driver_scores.get(d, 15.0))
+            
+            for i, driver in enumerate(sorted_drivers):
+                score = driver_scores.get(driver, 15.0)
+                team = driver_team_map.get(driver, 'unknown')
+                
+                # Normalize metrics (1.0 is best, 0.0 is worst)
+                performance_score = max(0.1, 1.0 - ((score - 1) / 19.0))
+                
+                # Track Specific Bonus (Final Polish)
+                track_bonus = 0.0
+                if circuit_id:
+                    # Driver loves track
+                    if driver in driver_track_history and driver_track_history[driver] < 4.0:
+                        track_bonus += 0.05
+                    # Team loves track
+                    if team in team_track_history and team_track_history[team] < 4.0:
+                        track_bonus += 0.05
+                
+                final_suitability = min(1.0, performance_score + track_bonus)
+                
+                synthetic_data.append({
+                    'season': season,
+                    'round': round_num,
+                    'driver_id': driver,
+                    'constructor_id': team,
+                    'grid': i + 1,
+                    'recent_pace': 1.0 + (score * 0.001), 
+                    'recent_consistency': performance_score,
+                    'experience_years': 5,
+                    'podium_rate': performance_score * 0.5,
+                    'dnf_rate': 0.05,
+                    'avg_pit_stop': 2.5,
+                    'qualifying_performance': performance_score,
+                    'wet_weather_ability': performance_score,
+                    'circuit_suitability': final_suitability,
+                    'reliability_score': 0.9,
+                    'team_strategy_score': 0.8 + (performance_score * 0.1),
+                    'tire_management': 0.8 + (performance_score * 0.1),
+                    'pressure_handling': 0.8 + (performance_score * 0.1),
+                    'overtaking_ability': 0.8 + (performance_score * 0.1),
+                    'defending_ability': 0.8 + (performance_score * 0.1),
                     'start_performance': 0.8 + (performance_score * 0.1)
                 })
             

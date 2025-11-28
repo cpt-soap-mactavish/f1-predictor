@@ -34,6 +34,7 @@ export function useSound(): UseSoundReturn {
         if (savedMute !== null) {
             setIsMuted(savedMute === "true");
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

@@ -46,9 +46,9 @@ const circuitMapUrls: Record<string, string> = {
     austin: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Austin_circuit.svg",
     mexico: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez_2015.svg",
     interlagos: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Circuit_Interlagos.svg",
-    vegas: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Las_Vegas_Strip_Circuit_2023.svg",
-    lusail: "https://upload.wikimedia.org/wikipedia/commons/8/83/Losail_International_Circuit_2023.svg",
-    abudhabi: "https://upload.wikimedia.org/wikipedia/commons/3/34/Yas_Marina_Circuit_2021.svg"
+    vegas: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Las_Vegas_Strip_Circuit_2023.svg",
+    lusail: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Lusail_International_Circuit_2023.svg",
+    abudhabi: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Yas_Marina_Circuit_2021.svg"
 };
 
 export default function CircuitMap({ circuitId, className }: CircuitMapProps) {

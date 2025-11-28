@@ -1,0 +1,15 @@
+quali_pos
+grid
+driver_form
+constructor_form
+pace_ratio
+recent_pace
+recent_consistency
+num_pit_stops
+avg_pit_duration
+recent_pit_form
+grid_penalty
+track_experience
+driver_encoded
+constructor_encoded
+circuit_encoded

@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 220 13% 5%;
+    --foreground: 0 0% 100%;
+    --card: 220 13% 9%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 13% 9%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 94% 44%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 13% 12%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 13% 12%;
+    --muted-foreground: 220 9% 63%;
+    --accent: 211 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 16%;
+    --input: 220 13% 16%;
+    --ring: 0 94% 44%;
+  }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 220 13% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 10%;
+    --primary: 0 94% 44%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 13% 95%;
+    --secondary-foreground: 220 13% 10%;
+    --muted: 220 13% 95%;
+    --muted-foreground: 220 9% 40%;
+    --accent: 211 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 85%;
+    --input: 220 13% 85%;
+    --ring: 0 94% 44%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer components {
+  .telemetry-number {
+    @apply font-mono text-2xl font-bold tracking-tight;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .telemetry-card {
+    @apply bg-card border border-border rounded-lg p-4 transition-all duration-200 hover:border-primary/50 hover:shadow-lg;
+  }
+
+  .glass-effect {
+    @apply bg-card/80 backdrop-blur-md border border-border/50;
+  }
+
+  .glow-red {
+    box-shadow: 0 0 10px rgba(225, 6, 0, 0.5);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 10px rgba(0, 144, 255, 0.5);
+  }
+
+  .progress-bar-sparks {
+    @apply relative overflow-hidden;
+  }
+}
+
+@layer utilities {
+  .text-gradient-red {
+    @apply bg-gradient-to-r from-f1-red to-red-600 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-f1-gold to-yellow-500 bg-clip-text text-transparent;
+  }
+}

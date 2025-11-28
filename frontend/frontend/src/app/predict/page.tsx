@@ -68,7 +68,14 @@ export default function PredictPage() {
             const data = await response.json();
 
             // Transform API response to frontend format
-            const predictions: Prediction[] = data.predictions.map((p: any) => ({
+            const predictions: Prediction[] = data.predictions.map((p: {
+                position: number;
+                driver_id: string;
+                constructor_id: string;
+                win_probability: number;
+                podium_probability: number;
+                confidence: number;
+            }) => ({
                 position: p.position,
                 driver_id: p.driver_id,
                 constructor_id: p.constructor_id,

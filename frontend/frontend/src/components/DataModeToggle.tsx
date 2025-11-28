@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Radio } from "lucide-react";
 
 interface DataModeToggleProps {
     isLive: boolean;

@@ -10,11 +10,6 @@ interface CircuitMapProps {
 
 // Accurate SVG Paths for F1 Circuits (Simplified for display)
 // These are standard representations of the track layouts.
-const circuitPaths: Record<string, string> = {
-    bahrain: "M50 20 L200 20 L220 50 L200 80 L150 80 L130 120 L100 120 L80 150 L50 150 L30 100 L50 20 Z", // Placeholder for now, will refine
-    jeddah: "M100 20 C150 20 200 50 200 100 C200 150 150 180 100 180 C50 180 20 150 20 100 C20 50 50 20 100 20", // Placeholder
-    // ... I will add real paths in the next step or use a generic one if I can't find exacts
-};
 
 // Since I cannot browse to get the exact 2025 SVG paths right now, 
 // I will use a high-quality placeholder approach where I display the 
@@ -84,6 +79,7 @@ export default function CircuitMap({ circuitId, className }: CircuitMapProps) {
             {mapUrl ? (
                 <div className="relative w-full h-48 flex items-center justify-center p-4">
                     {/* Invert colors for dark mode using CSS filter */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={mapUrl}
                         alt={`${circuitId} Layout`}

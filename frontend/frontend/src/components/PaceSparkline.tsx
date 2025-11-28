@@ -7,7 +7,7 @@ interface PaceSparklineProps {
 }
 
 export default function PaceSparkline({ data }: PaceSparklineProps) {
-    const chartData = data.map((value, index) => ({ value }));
+    const chartData = data.map((value) => ({ value }));
 
     return (
         <LineChart width={40} height={16} data={chartData}>
